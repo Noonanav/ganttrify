@@ -42,7 +42,10 @@ ganttrify <- function(project,
                       month_number_label = TRUE,
                       month_date_label = TRUE,
                       x_axis_position = "top",
-                      colour_stripe = "lightgray") {
+                      colour_stripe = "lightgray",
+                      shape_activity = "round",
+                      shape_wp = "round",
+                      segment_wp = TRUE) {
   
   # repeat colours if not enough colours given
   if (length(unique(project$wp))>length(as.character(wesanderson::wes_palette("Darjeeling1")))) {
@@ -178,13 +181,21 @@ ganttrify <- function(project,
   gg_gantt <- gg_gantt +
     ### activities
     ggplot2::geom_segment(data = df_yearmon_fct,
-                          lineend = "round",
-                          size = size_activity) +
-    ### wp
+                          size = 0) +
+    
     ggplot2::geom_segment(data = df_yearmon_fct %>%
+                            dplyr::filter(type!="wp"),
+                          lineend = shape_activity,
+                          size = size_activity)
+    
+  if (segment_wp == TRUE) {
+    gg_gantt <- gg_gantt +
+    ### wp
+      ggplot2::geom_segment(data = df_yearmon_fct %>%
                             dplyr::filter(type=="wp"),
-                          lineend = "round",
+                          lineend = shape_wp,
                           size = size_wp) 
+  }
   
   if (month_number_label==TRUE&month_date_label==TRUE) {
     gg_gantt <- gg_gantt +
