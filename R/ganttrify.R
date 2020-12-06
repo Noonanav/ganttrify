@@ -45,6 +45,8 @@ ganttrify <- function(project,
                       colour_stripe = "lightgray",
                       shape_activity = "round",
                       shape_wp = "round",
+                      alpha_wp = 1,
+                      alpha_activity = 1,
                       segment_wp = TRUE) {
   
   # repeat colours if not enough colours given
