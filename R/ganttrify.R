@@ -45,6 +45,8 @@ ganttrify <- function(project,
                       colour_stripe = "lightgray",
                       shape_activity = "round",
                       shape_wp = "round",
+                      alpha_wp = 1,
+                      alpha_activity = 1,
                       segment_wp = TRUE) {
   
   # repeat colours if not enough colours given
@@ -186,7 +188,8 @@ ganttrify <- function(project,
     ggplot2::geom_segment(data = df_yearmon_fct %>%
                             dplyr::filter(type!="wp"),
                           lineend = shape_activity,
-                          size = size_activity)
+                          size = size_activity,
+                          alpha = alpha_activity)
     
   if (segment_wp == TRUE) {
     gg_gantt <- gg_gantt +
@@ -194,7 +197,8 @@ ganttrify <- function(project,
       ggplot2::geom_segment(data = df_yearmon_fct %>%
                             dplyr::filter(type=="wp"),
                           lineend = shape_wp,
-                          size = size_wp) 
+                          size = size_wp,
+                          alpha = alpha_wp) 
   }
   
   if (month_number_label==TRUE&month_date_label==TRUE) {
