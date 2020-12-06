@@ -41,6 +41,7 @@ ganttrify <- function(project,
                       size_text_relative = 1,
                       month_number_label = TRUE,
                       month_date_label = TRUE,
+                      year_date_label = FALSE,
                       x_axis_position = "top",
                       colour_stripe = "lightgray",
                       shape_activity = "round",
@@ -201,30 +202,37 @@ ganttrify <- function(project,
                           alpha = alpha_wp) 
   }
   
-  if (month_number_label==TRUE&month_date_label==TRUE) {
+  if (month_number_label==TRUE&month_date_label==TRUE & year_date_label == FALSE) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(name = "",
                             breaks = date_breaks,
                             date_labels = "%b\n%Y",
                             minor_breaks = NULL,
                             sec.axis = ggplot2::dup_axis(labels = paste0("M", seq_along(date_breaks))))
-  } else if (month_number_label==FALSE&month_date_label==TRUE) {
+  } else if (month_number_label==FALSE&month_date_label==TRUE & year_date_label == FALSE) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(name = "",
                             breaks = date_breaks,
                             date_labels = "%b\n%Y",
                             minor_breaks = NULL,
                             position = x_axis_position)
-  } else if (month_number_label==TRUE&month_date_label==FALSE) {
+  } else if (month_number_label==TRUE&month_date_label==FALSE & year_date_label == FALSE) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(name = "",
                             breaks = date_breaks,
                             date_labels = paste0("M", seq_along(date_breaks)),
                             minor_breaks = NULL,
                             position = x_axis_position)
-  } else if (month_number_label==FALSE&month_date_label==FALSE) {
+  } else if (month_number_label==FALSE&month_date_label==FALSE & year_date_label == FALSE) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(name = "")
+  } else if (year_date_label == TRUE) {
+    gg_gantt <- gg_gantt +
+      ggplot2::scale_x_date(name = "",
+                            breaks = date_breaks_y,
+                            date_labels = "%Y",
+                            minor_breaks = NULL,
+                            position = x_axis_position)
   }
   
   gg_gantt <- suppressWarnings(gg_gantt +
