@@ -48,11 +48,19 @@ ganttrify <- function(project,
                       shape_wp = "round",
                       alpha_wp = 1,
                       alpha_activity = 1,
-                      segment_wp = TRUE) {
+                      segment_wp = TRUE,
+                      trim_rounds = TRUE) {
   
   # repeat colours if not enough colours given
   if (length(unique(project$wp))>length(as.character(wesanderson::wes_palette("Darjeeling1")))) {
     colour_palette <- rep(colour_palette, length(unique(project$wp)))[1:length(unique(project$wp))]
+  }
+  
+  
+  if (by_date==FALSE & shape_activity == 'round' & trim_rounds == TRUE) {
+    project <- project %>%
+      dplyr::mutate(start_date = as.numeric(start_date) + 1,
+                    end_date = as.numeric(end_date) - 1)
   }
   
   if (by_date==FALSE) {
