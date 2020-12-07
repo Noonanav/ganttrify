@@ -40,6 +40,7 @@ ganttrify <- function(project,
                       size_activity = 4,
                       size_text_relative = 1,
                       month_number_label = TRUE,
+                      quarter_number_label = FALSE,
                       month_date_label = TRUE,
                       year_date_label = FALSE,
                       x_axis_position = "top",
@@ -50,6 +51,16 @@ ganttrify <- function(project,
                       alpha_activity = 1,
                       segment_wp = TRUE,
                       trim_rounds = TRUE) {
+  # define start quarter
+  start_quarter <- try(quarter(ymd(project_start_date)))
+  if (is.na(start_quarter)) {
+    start_quarter <- try(quarter(ym(project_start_date)))
+  }
+  if (is.na(start_quarter)) {
+    print('Reformat project_start_date to YYYY/MM/DD or YYYY/MM to parse start quarter (only necessary if quarter_number_label == TRUE)')
+  } else if (class(start_quarter) == "integer") {
+    delta_quarter = start_quarter-1
+  }
   
   # repeat colours if not enough colours given
   if (length(unique(project$wp))>length(as.character(wesanderson::wes_palette("Darjeeling1")))) {
@@ -234,14 +245,39 @@ ganttrify <- function(project,
   } else if (month_number_label==FALSE&month_date_label==FALSE & year_date_label == FALSE) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(name = "")
-  } else if (year_date_label == TRUE) {
+  } else if (year_date_label == TRUE & month_date_label == FALSE & month_number_label == FALSE & quarter_number_label == FALSE) {
     gg_gantt <- gg_gantt +
       ggplot2::scale_x_date(name = "",
                             breaks = date_breaks_y,
                             date_labels = "%Y",
                             minor_breaks = NULL,
                             position = x_axis_position)
+  } else if (year_date_label == TRUE & month_date_label == TRUE) {
+    gg_gantt <- gg_gantt +
+      ggplot2::scale_x_date(name = "",
+                            breaks = date_breaks_y,
+                            date_labels = "%Y",
+                            minor_breaks = NULL,
+                            position = x_axis_position,
+                            sec.axis = ggplot2::dup_axis(labels = '%b', breaks = date_breaks))
+  } else if (year_date_label == TRUE & month_number_label == TRUE) {
+    gg_gantt <- gg_gantt +
+      ggplot2::scale_x_date(name = "",
+                            breaks = date_breaks_y,
+                            date_labels = "%Y",
+                            minor_breaks = NULL,
+                            position = x_axis_position,
+                            sec.axis = ggplot2::dup_axis(labels = paste0("M", seq_along(date_breaks)), breaks = date_breaks))
+  } else if (year_date_label == TRUE & quarter_number_label == TRUE) {
+    gg_gantt <- gg_gantt +
+      ggplot2::scale_x_date(name = "",
+                            breaks = date_breaks_y,
+                            date_labels = "%Y",
+                            minor_breaks = NULL,
+                            position = x_axis_position,
+                            sec.axis = ggplot2::dup_axis(labels = paste0("Q", as.character(as.numeric(seq_along(date_breaks_q))-delta_quarter)), breaks = date_breaks_q))
   }
+  
   
   gg_gantt <- suppressWarnings(gg_gantt +
     ggplot2::scale_y_discrete("") +
