@@ -50,7 +50,8 @@ ganttrify <- function(project,
                       alpha_wp = 1,
                       alpha_activity = 1,
                       segment_wp = TRUE,
-                      trim_rounds = TRUE) {
+                      trim_rounds = TRUE,
+                      mark_today = FALSE) {
   # define start quarter
   start_quarter <- try(quarter(ymd(project_start_date)))
   if (is.na(start_quarter)) {
@@ -59,7 +60,7 @@ ganttrify <- function(project,
   if (is.na(start_quarter)) {
     print('Reformat project_start_date to YYYY/MM/DD or YYYY/MM to parse start quarter (only necessary if quarter_number_label == TRUE)')
   } else if (class(start_quarter) == "integer") {
-    delta_quarter = start_quarter-1
+    delta_quarter = start_quarter
   }
   
   # repeat colours if not enough colours given
@@ -332,7 +333,12 @@ ganttrify <- function(project,
                             family = font_family,
                             size = 3*size_text_relative) 
     }
-  } 
+  }
+  
+  if (mark_today == TRUE) {
+    gg_gantt <- gg_gantt +
+      ggplot2::geom_vline(xintercept = Sys.Date(), colour = "black", linetype = 'dashed')
+  }
   
   return(gg_gantt)
   
