@@ -2,7 +2,6 @@
 % Please edit documentation in R/ganttrify.R
 \name{ganttrify}
 \alias{ganttrify}
-\alias{facet_gantt}
 \title{Create Gantt charts from a data frame}
 \usage{
 ganttrify(
@@ -31,31 +30,6 @@ ganttrify(
   segment_wp = TRUE,
   trim_rounds = TRUE,
   mark_today = FALSE
-)
-
-facet_gantt(
-  project,
-  spots = NULL,
-  by_date = FALSE,
-  exact_date = FALSE,
-  project_start_date = Sys.Date(),
-  colour_palette = wesanderson::wes_palette("Darjeeling1"),
-  font_family = "sans",
-  mark_quarters = FALSE,
-  mark_years = FALSE,
-  size_activity = 4,
-  size_text_relative = 1,
-  month_number_label = TRUE,
-  quarter_number_label = FALSE,
-  month_date_label = TRUE,
-  year_date_label = FALSE,
-  x_axis_position = "top",
-  colour_stripe = "lightgray",
-  shape_activity = "round",
-  alpha_activity = 1,
-  trim_rounds = TRUE,
-  mark_today = FALSE,
-  label_wrap_width = 12
 )
 }
 \arguments{
@@ -93,8 +67,6 @@ facet_gantt(
 }
 \value{
 A Gantt chart as a ggplot2 object.
-
-A faceted Gantt chart as a ggplot2 object.
 }
 \description{
 Creates Gantt charts with ggplot2.

@@ -22,6 +22,8 @@
 #' @param trim_rounds Logical, defaults to TRUE. If TRUE, shortens segments by 1 when rounded.
 #' @param mark_today Logical, defaults to FALSE. If TRUE, marks today's date with dashed line
 #' @param label_wrap_width Numeric, defaults to 12. Allows setting of width of wrapped text.
+#' @param wp_label_position Character, defaults to "right". Can also be "left". Places facet label on right or left of chart (will be placed outside activity labels if on same side)
+#' @param facet_text_angle Numeric, defaults to 0.
 #' @rdname facet_gantt
 #' @name facet_gantt
 #' @return A Gantt chart as a ggplot2 object.
@@ -54,7 +56,6 @@ facet_gantt <- function(project,
                         trim_rounds = TRUE,
                         mark_today = FALSE,
                         label_wrap_width = 12,
-                        # facet_label_switch = NULL,
                         wp_label_position = 'right',
                         activity_label_position = 'left',
                         facet_text_angle = 0
@@ -344,7 +345,8 @@ facet_gantt <- function(project,
   if (wp_label_position == 'right') {
   gg_gantt <- gg_gantt +
     ggplot2::facet_grid(rows = vars(wp), scales = "free_y", space = "free_y", labeller = labeller(wp = label_wrap_gen(label_wrap_width)), switch = NULL) +
-    theme(strip.text.y = element_text(size = ggplot2::rel(size_text_relative), colour = "black", angle = facet_text_angle, face = "bold"))
+    theme(strip.text.y = element_text(size = ggplot2::rel(size_text_relative), colour = "black", angle = facet_text_angle, face = "bold")) +
+    theme(strip.placement = "outside")
   }
   
   if (wp_label_position == 'left') {

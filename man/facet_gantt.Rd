@@ -26,13 +26,16 @@ facet_gantt(
   alpha_activity = 1,
   trim_rounds = TRUE,
   mark_today = FALSE,
-  label_wrap_width = 12
+  label_wrap_width = 12,
+  wp_label_position = "right",
+  activity_label_position = "left",
+  facet_text_angle = 0
 )
 }
 \arguments{
-\item{project}{A data frame. See `ganttrify::test_project` for an example.}
+\item{project}{A data frame. See `facet_gantt::test_project` for an example.}
 
-\item{spots}{A data frame. See `ganttrify::test_spots` for an example.}
+\item{spots}{A data frame. See `facet_gantt::test_spots` for an example.}
 
 \item{by_date}{Logical, defaults to FALSE If FALSE, the the start and end columns in the data frame should correspond to month numbers from the beginning of the project. If TRUE, dates in the format ("2020-10" or "2020-10-01") should be given.}
 
@@ -69,6 +72,10 @@ facet_gantt(
 \item{mark_today}{Logical, defaults to FALSE. If TRUE, marks today's date with dashed line}
 
 \item{label_wrap_width}{Numeric, defaults to 12. Allows setting of width of wrapped text.}
+
+\item{wp_label_position}{Character, defaults to "right". Can also be "left". Places facet label on right or left of chart (will be placed outside activity labels if on same side)}
+
+\item{facet_text_angle}{Numeric, defaults to 0.}
 }
 \value{
 A Gantt chart as a ggplot2 object.
