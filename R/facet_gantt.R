@@ -2,8 +2,8 @@
 #'
 #' Creates Gantt charts with ggplot2.
 #'
-#' @param project A data frame. See `ganttrify::test_project` for an example.
-#' @param spots A data frame. See `ganttrify::test_spots` for an example.
+#' @param project A data frame. See `facet_gantt::test_project` for an example.
+#' @param spots A data frame. See `facet_gantt::test_spots` for an example.
 #' @param by_date Logical, defaults to FALSE If FALSE, the the start and end columns in the data frame should correspond to month numbers from the beginning of the project. If TRUE, dates in the format ("2020-10" or "2020-10-01") should be given.
 #' @param exact_date Logical, defaults to FALSE. If FALSE, then periods are always understood to include full months. If FALSE, then exact dates can be given.
 #' @param project_start_date The date when the project starts. It can be a date, or a string in the format "2020-03" or "2020-03-01". Ignored if `month_number_date` is set to FALSE.
@@ -11,13 +11,17 @@
 #' @param font_family A character vector of length 1, defaults to "sans". It is recommended to use a narrow/condensed font such as Roboto Condensed for more efficient use of text space.
 #' @param mark_quarters Logical, defaults to FALSE. If TRUE, vertical lines are added in correspondence of change of quarter (end of March, end of June, end of September, end of December).
 #' @param mark_years Logical, defaults to FALSE. If TRUE, vertical lines are added in correspondence of change of year (1 January).
-#' @param size_wp Numeric, defaults to 6. It defines the thickness of the line used to represent WPs.
 #' @param size_activity Numeric, defaults to 4. It defines the thickness of the line used to represent activities.
 #' @param size_text_relative Numeric, defaults to 1. Changes the size of all textual elements relative to their default size. If you set this to e.g. 1.5 all text elements will be 50\% bigger.
 #' @param month_number_label Logical, defaults to TRUE. If TRUE, it includes month numbering on x axis.
 #' @param month_date_label Logical, defaults to TRUE. If TRUE, it includes month names and dates on the x axis.
 #' @param x_axis_position Logical, defaults to "top". Can also be "bottom". Used only when only one of `month_number_label` and `month_date_label` is TRUE, otherwise ignored.
 #' @param colour_stripe Character, defaults to "lightgray". This is the stripe colour in the background used in alternate months.
+#' @param shape_activity Character, defaults to "round". Can also be "butt". This dictates the shape of the activity segments.
+#' @param alpha_activity Numeric, defaults to 1. Allows definition of the transparency of activity segments.
+#' @param trim_rounds Logical, defaults to TRUE. If TRUE, shortens segments by 1 when rounded.
+#' @param mark_today Logical, defaults to FALSE. If TRUE, marks today's date with dashed line
+#' @param label_wrap_width Numeric, defaults to 12. Allows setting of width of wrapped text.
 #' @rdname facet_gantt
 #' @name facet_gantt
 #' @return A Gantt chart as a ggplot2 object.
@@ -49,7 +53,11 @@ facet_gantt <- function(project,
                         alpha_activity = 1,
                         trim_rounds = TRUE,
                         mark_today = FALSE,
-                        label_wrap_width = 12
+                        label_wrap_width = 12,
+                        # facet_label_switch = NULL,
+                        wp_label_position = 'right',
+                        activity_label_position = 'left',
+                        facet_text_angle = 0
 ) {
   # define start quarter
   start_quarter <- try(quarter(ymd(project_start_date)))
@@ -274,7 +282,7 @@ facet_gantt <- function(project,
   
   
   gg_gantt <- suppressWarnings(gg_gantt +
-                                 ggplot2::scale_y_discrete("") +
+                                 ggplot2::scale_y_discrete("", position = activity_label_position) +
                                  ggplot2::theme_minimal() +
                                  ggplot2::scale_colour_manual(values = colour_palette) +
                                  ggplot2::theme(text = ggplot2::element_text(family = font_family),
@@ -333,9 +341,18 @@ facet_gantt <- function(project,
       ggplot2::geom_vline(xintercept = Sys.Date(), colour = "black", linetype = 'dashed')
   }
   
+  if (wp_label_position == 'right') {
   gg_gantt <- gg_gantt +
-    ggplot2::facet_grid(rows = vars(wp), scales = "free_y", space = "free_y", labeller = labeller(wp = label_wrap_gen(label_wrap_width))) +
-    theme(strip.text.y = element_text(size = ggplot2::rel(size_text_relative), colour = "black", angle = 0, face = "bold"))
+    ggplot2::facet_grid(rows = vars(wp), scales = "free_y", space = "free_y", labeller = labeller(wp = label_wrap_gen(label_wrap_width)), switch = NULL) +
+    theme(strip.text.y = element_text(size = ggplot2::rel(size_text_relative), colour = "black", angle = facet_text_angle, face = "bold"))
+  }
+  
+  if (wp_label_position == 'left') {
+    gg_gantt <- gg_gantt +
+      ggplot2::facet_grid(rows = vars(wp), scales = "free_y", space = "free_y", labeller = labeller(wp = label_wrap_gen(label_wrap_width)), switch = 'y') +
+      theme(strip.text.y.left = element_text(size = ggplot2::rel(size_text_relative), colour = "black", angle = facet_text_angle, face = "bold")) +
+      theme(strip.placement = "outside")
+  }
   
   return(gg_gantt)
   

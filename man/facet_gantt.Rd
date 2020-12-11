@@ -60,7 +60,15 @@ facet_gantt(
 
 \item{colour_stripe}{Character, defaults to "lightgray". This is the stripe colour in the background used in alternate months.}
 
-\item{size_wp}{Numeric, defaults to 6. It defines the thickness of the line used to represent WPs.}
+\item{shape_activity}{Character, defaults to "round". Can also be "butt". This dictates the shape of the activity segments.}
+
+\item{alpha_activity}{Numeric, defaults to 1. Allows definition of the transparency of activity segments.}
+
+\item{trim_rounds}{Logical, defaults to TRUE. If TRUE, shortens segments by 1 when rounded.}
+
+\item{mark_today}{Logical, defaults to FALSE. If TRUE, marks today's date with dashed line}
+
+\item{label_wrap_width}{Numeric, defaults to 12. Allows setting of width of wrapped text.}
 }
 \value{
 A Gantt chart as a ggplot2 object.
