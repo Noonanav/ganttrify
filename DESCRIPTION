@@ -1,4 +1,4 @@
-Package: ganttrify
+Package: ganttrify2
 Title: Create beautiful Gantt charts with ggplot2
 Version: 0.0.0.9004
 Authors@R: 
@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "g@giorgiocomai.eu",
            comment = c(ORCID = "0000-0002-0515-9542"))
-Description: 'ganttrify' facilitates the creation of nice-looking Gantt charts, commonly used in project proposals and project management.
+Description: 'ganttrify2' facilitates the creation of nice-looking Gantt charts, commonly used in project proposals and project management.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
